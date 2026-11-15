@@ -1,0 +1,66 @@
+name: Заявка на номерной знак
+description: Выдача или замена номерного знака для транспортного средства (ЗК15, ЗК6.2)
+title: "[Номер] "
+labels: ["номерной знак", "ожидает ответа", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Заявку рассматривает ответственный Регистратор (см. CODEOWNERS).
+        Не указывайте в Issue личные данные из реального мира: только игровой ник и данные из игры.
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник
+      description: Должен совпадать с записью в `Реестры/Граждане/`. Без гражданства заявку не примут (ЗК15.4, ЗК14.7).
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: Что нужно
+      options:
+        - Выдача нового номера
+        - Замена номера
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Вид номера
+      description: Золотой номер выдаётся только с разрешения Президента (ЗК15.3, ЗК15.5).
+      options:
+        - Обычный (формат A1234 07)
+        - Золотой (нужно разрешение Президента)
+    validations:
+      required: true
+  - type: input
+    id: wish
+    attributes:
+      label: Желаемая надпись
+      description: Для обычного номера формат A1234 07 (Статья 5). Для золотого надпись свободная, но не совпадает с другими государственными номерами (ЗК15.7).
+    validations:
+      required: true
+  - type: input
+    id: vehicle
+    attributes:
+      label: Транспорт
+      description: Вид и марка или описание (например, «легковой автомобиль, белый»).
+    validations:
+      required: true
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата
+      description: Сбор 3 Изумруда за выдачу или замену (ЗК6.2). Укажите дату и способ оплаты в GoBank.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Я указал(а) только игровые данные, без личной информации из реального мира.
+          required: true
+        - label: Я понимаю, что золотой номер без разрешения Президента не выдаётся.
+          required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Вопросы по законам
+    url: https://github.com/OWNER/7stars/discussions
+    about: Общие вопросы по законам и Конституции (замените OWNER на владельца репозитория)

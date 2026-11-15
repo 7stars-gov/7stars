@@ -1,0 +1,43 @@
+name: Регистрация ЧЦС
+description: Регистрация частного центра строительства (Статья 17 Конституции, ЗК6.3, ЗК7.4)
+title: "[ЧЦС] "
+labels: ["ЧЦС", "регистратор", "суд", "залог", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Для ЧЦС нужны: план застройки, залог (от 200 до 1500 Изумрудов, размер устанавливает суд, ЗК6.3), взнос 30 Изумрудов (ЗК6.2).
+        Залог утверждается судом до внесения записи (ЗК7.4).
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Название ЧЦС
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: План застройки
+      description: Районы, координаты, сроки. Можно приложить ссылку на схему.
+    validations:
+      required: true
+  - type: input
+    id: deposit
+    attributes:
+      label: Залог
+      description: Сумма, утверждённая судом, и номер решения (например, ОС-001-2026).
+    validations:
+      required: true
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата взноса
+      description: Дата и способ оплаты в GoBank.
+    validations:
+      required: true

@@ -1,0 +1,35 @@
+name: Заявка на финансирование
+description: Заявка Городского совета или городского проекта на финансирование из GoBank (ЗК17, ЗК16)
+title: "[Финансирование] "
+labels: ["финансирование", "городской совет", "GoBank", "route:городской-совет"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Заявку рассматривает Городской совет, решение публикуется в `Органы власти/Городской совет/Решения/`.
+        Выплаты проводит GoBank (ЗК16).
+  - type: input
+    id: city
+    attributes:
+      label: Город или район
+    validations:
+      required: true
+  - type: input
+    id: project
+    attributes:
+      label: Название проекта
+    validations:
+      required: true
+  - type: textarea
+    id: budget
+    attributes:
+      label: Смета (Изумруды) и срок
+      description: Разбивка по статьям, срок выполнения.
+    validations:
+      required: true
+  - type: input
+    id: applicant
+    attributes:
+      label: Заявитель (игровой ник)
+    validations:
+      required: true

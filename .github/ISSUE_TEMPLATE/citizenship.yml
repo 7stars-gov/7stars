@@ -1,0 +1,26 @@
+name: Гражданство
+description: Заявление на гражданство (ЗК14, Статья 9.2 Конституции)
+title: "[Гражданство] "
+labels: ["гражданство", "регистратор", "срок 30 минут", "route:гражданство"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Срок внесения записи в Реестр граждан: 30 минут с момента подачи (ЗК14.2). Заявку ведёт Регистратор (см. CODEOWNERS).
+        Указывайте только игровой ник и данные из игры.
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник
+      description: Точное написание (ЗК14.3).
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Я ознакомлен(а) с Конституцией и обязуюсь её соблюдать (ЗК14.3).
+          required: true
+        - label: Я не указываю личных данных из реального мира.
+          required: true

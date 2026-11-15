@@ -1,0 +1,78 @@
+name: Маршрутизация и проверка заявок
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Маршрутизировать и проверить заявку
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const routes = JSON.parse(fs.readFileSync('.github/routing.json', 'utf8'));
+            const issue = context.payload.issue;
+            const { owner, repo } = context.repo;
+            const labelNames = issue.labels.map(l => l.name);
+
+            // Найти метку маршрута
+            const routeLabel = labelNames.find(n => n.startsWith('route:') && routes[n]);
+            if (!routeLabel) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['не маршрутизировано'] });
+              await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
+                body: 'Не удалось определить службу по шаблону. Заявка передана модерации вручную.' });
+              return;
+            }
+            const route = routes[routeLabel];
+
+            // Проверка гражданства: все поля, где указан ник, должны быть в Реестре граждан
+            if (route.нужно_гражданство) {
+              const citizensDir = 'Реестры/Граждане';
+              let registryText = '';
+              const walk = (dir) => {
+                for (const name of fs.readdirSync(dir)) {
+                  const p = path.join(dir, name);
+                  if (fs.statSync(p).isDirectory()) walk(p);
+                  else if (name.endsWith('.md')) registryText += fs.readFileSync(p, 'utf8') + '\n';
+                }
+              };
+              walk(citizensDir);
+
+              // Вытащить значения полей, в заголовках которых есть «ник»
+              const body = issue.body || '';
+              const sections = body.split(/^### /m).slice(1);
+              const nicks = [];
+              for (const s of sections) {
+                const [heading, ...rest] = s.split('\n');
+                if (!/ник/i.test(heading)) continue;
+                const value = rest.join('\n').split('\n').map(x => x.trim()).find(x => x && x !== '_No response_');
+                if (value) nicks.push(value);
+              }
+
+              const missing = nicks.filter(n => !registryText.includes(n));
+              if (missing.length > 0) {
+                await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['нет гражданства'] });
+                await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
+                  body: `Ник не найден в Реестре граждан: ${missing.join(', ')}.\nСначала получите гражданство по шаблону «Гражданство» (ЗК14.3, ЗК14.7). После этого откройте заявку заново.` });
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'not_planned' });
+                return;
+              }
+            }
+
+            // Назначить ответственных и подать сигнал команде
+            if (route.users && route.users.length > 0) {
+              await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: route.users });
+            }
+            await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['в работе'] });
+            await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
+              body: `Заявка передана команде @${route.team}.\nСрок рассмотрения: ${route.срок}.` });

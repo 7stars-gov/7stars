@@ -1,0 +1,36 @@
+name: Регистрация брака
+description: Регистрация брака в Брачном зале (Статья 27 Конституции, ЗК8)
+title: "[Брак] "
+labels: ["брак", "брачный зал", "route:брачный-зал"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Брак регистрируется в Брачном зале (ЗК8.1). Номер БР-XXX присваивается автоматически при слиянии.
+        Укажите только игровые ники.
+  - type: input
+    id: bz
+    attributes:
+      label: Брачный зал
+      description: Например, «❤️ Love».
+    validations:
+      required: true
+  - type: input
+    id: spouse1
+    attributes:
+      label: Супруг(а) 1 (игровой ник)
+    validations:
+      required: true
+  - type: input
+    id: spouse2
+    attributes:
+      label: Супруг(а) 2 (игровой ник)
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Оба супруга подтверждают согласие (ЗК8).
+          required: true

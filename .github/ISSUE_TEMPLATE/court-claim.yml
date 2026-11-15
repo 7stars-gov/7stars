@@ -1,0 +1,51 @@
+name: Иск в суд
+description: Заявление в обычный или Верховный суд (Статья 8, ЗК2, ЗК1.3)
+title: "[Иск] "
+labels: ["суд", "ожидает принятия", "route:суд"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Заявление подаётся в письменной форме с указанием сути требования и доказательств (Статья 8.2 Конституции).
+        Рассмотрение не позднее 14 дней с принятия к производству (Статья 8.7.4). Пока действует временный режим ЗК18, заседания ведёт ИИ.
+  - type: dropdown
+    id: court
+    attributes:
+      label: Суд
+      options:
+        - Обычный суд
+        - Верховный суд
+    validations:
+      required: true
+  - type: input
+    id: plaintiff
+    attributes:
+      label: Истец (игровой ник)
+    validations:
+      required: true
+  - type: input
+    id: defendant
+    attributes:
+      label: Ответчик (игровой ник, орган или организация)
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Суть требования
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Доказательства
+      description: Ссылки на скриншоты, записи, документы, номера связанных записей реестров.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Я не указываю личных данных из реального мира.
+          required: true

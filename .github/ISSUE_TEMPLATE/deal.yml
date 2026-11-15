@@ -1,0 +1,49 @@
+name: Сделка с недвижимостью
+description: Покупка, продажа или аренда недвижимости через GoBank (Статья 4.1.4, ЗК16.4–16.6)
+title: "[Сделка] "
+labels: ["сделка", "GoBank", "route:gobank"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Сделки оформляет GoBank и направляет сведения Регистратору (ЗК16.6). Срок внесения записи — 3 дня (ЗК22.6).
+  - type: dropdown
+    id: type
+    attributes:
+      label: Вид сделки
+      options:
+        - Покупка
+        - Продажа
+        - Аренда
+    validations:
+      required: true
+  - type: input
+    id: seller
+    attributes:
+      label: Продавец или арендодатель (ник)
+    validations:
+      required: true
+  - type: input
+    id: buyer
+    attributes:
+      label: Покупатель или арендатор (ник)
+    validations:
+      required: true
+  - type: textarea
+    id: object
+    attributes:
+      label: Объект
+      description: Адрес или координаты, вид (дом, квартира, помещение, земля).
+    validations:
+      required: true
+  - type: input
+    id: price
+    attributes:
+      label: Цена или ставка аренды (Изумруды)
+    validations:
+      required: true
+  - type: input
+    id: term
+    attributes:
+      label: Срок (только для аренды)
+      description: Например, «до 01.01.2027».

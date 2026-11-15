@@ -1,0 +1,50 @@
+name: Обращение о нарушении ПДД
+description: Жалоба на нарушение Правил дорожного движения (ЗК21.10–21.14)
+title: "[ПДД] "
+labels: ["ГИБДД", "обращение", "срок 7 дней", "route:гибдд"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Обращение можно подать, даже если вы не пострадали: проехали мимо или были свидетелем (ЗК21.10).
+        Приложите доказательство: запись экрана, скриншот или иную фиксацию (ЗК21.12). Рассмотрение не позднее 7 дней (ЗК21.13).
+  - type: input
+    id: nick
+    attributes:
+      label: Ваш игровой ник (заявитель)
+    validations:
+      required: true
+  - type: input
+    id: when
+    attributes:
+      label: Дата и время по игровому времени
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Место
+      description: Дорога, город, координаты, если известны.
+    validations:
+      required: true
+  - type: input
+    id: vehicle
+    attributes:
+      label: Транспорт и игрок, которого касается обращение (если известны)
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание нарушения
+    validations:
+      required: true
+  - type: textarea
+    id: witnesses
+    attributes:
+      label: Свидетели (ники)
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Доказательства
+      description: Ссылки на запись, скриншоты или иная фиксация. Полную непрерывную запись нужно будет предоставить по запросу ГИБДД (ЗК21.12).
+    validations:
+      required: true

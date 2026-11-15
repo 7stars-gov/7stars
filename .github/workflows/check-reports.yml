@@ -1,0 +1,39 @@
+name: Проверка отчётов
+
+on:
+  pull_request:
+    paths:
+      - "Отчёты/**"
+  push:
+    branches: [main]
+    paths:
+      - "Отчёты/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Проверить обязательные поля
+        run: |
+          status=0
+          for f in $(find "Отчёты" -name "*.md" ! -name "README.md" ! -name "_шаблон отчёта.md"); do
+            for field in "**Ответственный:**" "**Орган:**" "**Период:**" "**Дата сдачи:**" "**Подпись ответственного:**"; do
+              if ! grep -qF "$field" "$f"; then
+                echo "::error file=$f::Нет поля $field"
+                status=1
+              fi
+            done
+          done
+          exit $status
+
+      - name: Сводка отчётов
+        run: |
+          echo "## Отчёты в репозитории" >> "$GITHUB_STEP_SUMMARY"
+          find "Отчёты" -name "*.md" ! -name "README.md" ! -name "_шаблон отчёта.md" | sort | while read -r f; do
+            echo "- $f" >> "$GITHUB_STEP_SUMMARY"
+          done

@@ -1,0 +1,48 @@
+name: Регистрация ЧАО
+description: Открытие частной организации (Статья 14 Конституции, ЗК7.3, ЗК6.2)
+title: "[ЧАО] "
+labels: ["ЧАО", "регистратор", "срок 3 рабочих дня", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Взнос: 15 Изумрудов (ЗК6.2). Название, совпадающее с реальной организацией, регистрируется только как ЧАО-бенефициар (ЗК11).
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Название ЧАО
+    validations:
+      required: true
+  - type: input
+    id: sphere
+    attributes:
+      label: Сфера деятельности
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Местоположение
+      description: Адрес или координаты. Аренда земли не допускается на улице Центральной (Статья 18.1).
+    validations:
+      required: true
+  - type: checkboxes
+    id: beneficiary
+    attributes:
+      label: Название похоже на реальную организацию?
+      options:
+        - label: Да, это может быть реальный правообладатель (регистрация как ЧАО-бенефициар по ЗК11)
+        - label: Нет
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата взноса
+      description: Дата и способ оплаты в GoBank.
+    validations:
+      required: true

@@ -1,0 +1,47 @@
+name: Регистрация имущества
+description: Регистрация дома, транспорта или переоформление (Статья 25 Конституции, ЗК6.2)
+title: "[Имущество] "
+labels: ["имущество", "регистратор", "срок 3 рабочих дня", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Взнос: 5 Изумрудов за дом или транспорт, 4 за переоформление (ЗК6.2). Оплатите в GoBank и укажите дату оплаты.
+        Регистрация только при гражданстве (ЗК14.7).
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что регистрируем
+      options:
+        - Дом или здание
+        - Транспорт
+        - Переоформление (передача другому гражданину)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание и координаты
+      description: Адрес или координаты, вид и марка транспорта.
+    validations:
+      required: true
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата взноса
+      description: Дата и способ оплаты в GoBank.
+    validations:
+      required: true
+  - type: input
+    id: basis
+    attributes:
+      label: Основание права
+      description: Например, «строительство», «покупка у GoBank (дата)», «решение суда», «постановление».
+    validations:
+      required: true
