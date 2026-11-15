@@ -1,0 +1,83 @@
+name: Публичный журнал модерации
+
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [closed]
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  journal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const JOURNAL_TITLE = 'Журнал модерации';
+            const JOURNAL_LABEL = 'журнал модерации';
+            const date = new Date().toISOString().slice(0, 10);
+
+            // Найти или создать открытый журнал
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: JOURNAL_LABEL, per_page: 100,
+            });
+            let journal = issues.find(i => i.title === JOURNAL_TITLE);
+            if (!journal) {
+              try {
+                await github.rest.issues.createLabel({ owner, repo, name: JOURNAL_LABEL, color: 'ededed' });
+              } catch (e) { /* метка уже есть */ }
+              const created = await github.rest.issues.create({
+                owner, repo, title: JOURNAL_TITLE, labels: [JOURNAL_LABEL],
+                body: 'Публичный журнал всех решений модератора по законам, постановлениям, решениям судов и реестрам (ЗК23.10). Записи добавляются автоматически.',
+              });
+              journal = created.data;
+            }
+
+            const post = (body) => github.rest.issues.createComment({
+              owner, repo, issue_number: journal.number, body,
+            });
+
+            // Автоматический отказ по заявке (закрыта workflow, метка «нет гражданства»)
+            if (context.eventName === 'issues') {
+              const issue = context.payload.issue;
+              const labelNames = issue.labels.map(l => l.name);
+              if (!labelNames.includes('нет гражданства')) return;
+              await post(`- ${date} | автоматически (route-issues) | отказ по заявке | Issue #${issue.number} «${issue.title}» | ЗК14.7, ЗК23.6\n  Основание: ник не найден в Реестре граждан. Заявку можно подать повторно после получения гражданства.`);
+              return;
+            }
+
+            // Файлы PR
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+            const names = files.map(f => f.filename);
+            const relevant = names.filter(f => f.startsWith('Законы/') || f.startsWith('Постановления/') || f.startsWith('Суд/') || f.startsWith('Реестры/') || f.startsWith('Constitution'));
+            if (relevant.length === 0) return;
+
+            const docs = relevant.map(f => `\`${f}\``).join(', ');
+            let entry;
+
+            if (context.eventName === 'pull_request_review') {
+              const review = context.payload.review;
+              const state = review.state.toLowerCase();
+              const verdict = state === 'approved' ? 'одобрено'
+                : state === 'changes_requested' ? 'запрошены изменения'
+                : 'комментарий';
+              entry = `- ${date} | @${review.user.login} | ${verdict} | PR #${pr.number} «${pr.title}» | ${docs}` +
+                (review.body ? `\n  Основание: ${review.body.trim()}` : '\n  Основание: не указано (ЗК23.6)');
+            } else {
+              const merged = pr.merged === true;
+              entry = merged
+                ? `- ${date} | @${context.actor} | слито | PR #${pr.number} «${pr.title}» | ${docs}`
+                : `- ${date} | @${context.actor} | закрыто без слияния | PR #${pr.number} «${pr.title}» | ${docs}\n  Основание: см. комментарии PR (ЗК23.6)`;
+            }
+
+            await post(entry);

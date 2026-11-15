@@ -1,0 +1,88 @@
+name: Проверка одобрения законов
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    paths:
+      - "Законы/**"
+      - "Constitution 7stars.md"
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  check-approval:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Найти изменённые законы и проверить решение суда
+        shell: bash
+        run: |
+          set -u
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD -- "Законы" "Constitution 7stars.md")
+          if [ -z "$changed" ]; then
+            echo "Законы не менялись, проверка не нужна."
+            exit 0
+          fi
+
+          status=0
+          while read -r f; do
+            [ -z "$f" ] && continue
+            if [[ "$f" == Constitution* ]]; then
+              # Поправки к Конституции: нужно решение в Конституционных делах
+              if ! grep -ril "одобрить" "Суд/Конституционные дела" >/dev/null 2>&1; then
+                echo "::error file=$f::Нет решения «Конституционного дела» с формулировкой «одобрить» в Суд/Конституционные дела/"
+                status=1
+              fi
+              continue
+            fi
+            # Номер закона вида ЗК23.7stars
+            code=$(echo "$f" | grep -oE 'ЗК[0-9]+\.7stars' | head -1)
+            if [ -z "$code" ]; then
+              echo "::error file=$f::Не найден номер закона (ЗК…7stars) в имени файла"
+              status=1
+              continue
+            fi
+            if ! grep -rl --include="*.md" "$code" "Суд/Верховный суд" | xargs -r grep -il "одобрить" >/dev/null 2>&1; then
+              echo "::error file=$f::Нет решения Верховного суда ($code) с формулировкой «одобрить» в Суд/Верховный суд/"
+              status=1
+            fi
+          done <<< "$changed"
+          exit $status
+
+  announce-rejection:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const { owner, repo } = context.repo;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+            const lawFiles = files.map(f => f.filename).filter(f => f.startsWith('Законы/') || f.startsWith('Constitution'));
+            if (lawFiles.length === 0) return;
+            await github.rest.issues.create({
+              owner, repo,
+              title: `Отклонено изменение закона: PR #${pr.number}`,
+              labels: ['отказ', 'суд'],
+              body: [
+                `Пулл-реквест #${pr.number} («${pr.title}») закрыт без слияния.`,
+                `Затронутые файлы:`,
+                ...lawFiles.map(f => `- ${f}`),
+                ``,
+                `Автор: @${pr.user.login}. Закрыл: @${context.actor}.`,
+                ``,
+                `По ЗК23.6 отказ должен содержать основание со ссылкой на статью закона. Пока основания нет в комментариях PR, решение публично оспоримо в Верховном суде (ЗК1.3).`,
+                `Передано в Суд: @${owner}/суд`,
+              ].join('\n'),
+            });
