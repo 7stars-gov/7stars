@@ -1,7 +1,6 @@
 name: Проверка отчётов
 
 on:
-  workflow_dispatch:
   pull_request:
     paths:
       - "Отчёты/**"
