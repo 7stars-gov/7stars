@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Вопросы по законам
-    url: https://github.com/OWNER/7stars/discussions
-    about: Общие вопросы по законам и Конституции (замените OWNER на владельца репозитория)
+    url: https://github.com/7stars-gov/7stars/discussions #7stars-gov имя организации для ссылания на репозиторий
+    about: Общие вопросы по законам и Конституции
