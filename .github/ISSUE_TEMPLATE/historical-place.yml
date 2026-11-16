@@ -1,0 +1,46 @@
+name: Historical Places: признание или изменение границ
+description: Заявка на признание объекта Historical Place или изменение его статуса (ЗК4)
+title: "[Historical Place] "
+labels: ["historical place", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Статус Historical Place присваивается только постановлением Президента (ЗК4.1). Изменение границ или снятие статуса — тоже только новым постановлением (ЗК4.4).
+        Ваша заявка — предложение: Регистратор проверит её и передаст Президенту.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что нужно
+      options:
+        - Признать объект Historical Place
+        - Изменить границы
+        - Снять статус
+    validations:
+      required: true
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник заявителя
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Название объекта
+    validations:
+      required: true
+  - type: textarea
+    id: location
+    attributes:
+      label: Местоположение
+      description: Точные координаты или описание (ЗК4.2).
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Обоснование исторической ценности
+      description: Для изменения или снятия — причина.
+    validations:
+      required: true

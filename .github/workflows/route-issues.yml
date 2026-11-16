@@ -20,22 +20,28 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const routes = JSON.parse(fs.readFileSync('.github/routing.json', 'utf8'));
+            const config = JSON.parse(fs.readFileSync('.github/routing.json', 'utf8'));
             const issue = context.payload.issue;
             const { owner, repo } = context.repo;
             const labelNames = issue.labels.map(l => l.name);
 
-            // Найти метку маршрута
-            const routeLabel = labelNames.find(n => n.startsWith('route:') && routes[n]);
+            // 1. Маршрут: метка route:... из шаблона либо адресат межведомственного запроса
+            let routeLabel = labelNames.find(n => n.startsWith('route:') && config[n]);
+            if (!routeLabel && labelNames.includes('межведомственный')) {
+              const m = (issue.body || '').match(/### Адресат \(орган\)\s+([^\n]+)/);
+              const target = m ? m[1].trim() : null;
+              const mapped = target && config._адресаты[target];
+              if (mapped && config[mapped]) routeLabel = mapped;
+            }
             if (!routeLabel) {
               await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['не маршрутизировано'] });
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
-                body: 'Не удалось определить службу по шаблону. Заявка передана модерации вручную.' });
+                body: 'Не удалось определить службу по шаблону или адресату. Заявка передана модерации вручную.' });
               return;
             }
-            const route = routes[routeLabel];
+            const route = config[routeLabel];
 
-            // Проверка гражданства: все поля, где указан ник, должны быть в Реестре граждан
+            // 2. Проверка гражданства: ники из полей формы должны быть в Реестре граждан
             if (route.нужно_гражданство) {
               const citizensDir = 'Реестры/Граждане';
               let registryText = '';
@@ -48,7 +54,6 @@ jobs:
               };
               walk(citizensDir);
 
-              // Вытащить значения полей, в заголовках которых есть «ник»
               const body = issue.body || '';
               const sections = body.split(/^### /m).slice(1);
               const nicks = [];
@@ -69,10 +74,21 @@ jobs:
               }
             }
 
-            // Назначить ответственных и подать сигнал команде
+            // 3. Назначить ответственных и подать сигнал команде
             if (route.users && route.users.length > 0) {
               await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: route.users });
             }
             await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['в работе'] });
             await github.rest.issues.createComment({ owner, repo, issue_number: issue.number,
               body: `Заявка передана команде @${route.team}.\nСрок рассмотрения: ${route.срок}.` });
+
+            // 4. Межведомственный запрос публикуется в журнале модерации (ЗК26.7)
+            if (labelNames.includes('межведомственный')) {
+              const { data: js } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', labels: 'журнал модерации', per_page: 100 });
+              const journal = js.find(i => i.title === 'Журнал модерации');
+              if (journal) {
+                const date = new Date().toISOString().slice(0, 10);
+                await github.rest.issues.createComment({ owner, repo, issue_number: journal.number,
+                  body: `- ${date} | межведомственный запрос | Issue #${issue.number} «${issue.title}» | ${route.срок} | ЗК26.7` });
+              }
+            }

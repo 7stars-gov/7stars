@@ -1,0 +1,47 @@
+name: ЧАО и ЧЦС: изменения
+description: Закрытие, смена владельца или снятие залога ЧАО и ЧЦС (ЗК7.3, ЗК7.4, ЗК11.5)
+title: "[ЧАО/ЧЦС: изменение] "
+labels: ["ЧАО", "ЧЦС", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Порядок описан в проекте ЗК24.7stars (закрытие, смена владельца, залог). После подписания закона Регистратор работает по нему. До этого вопрос передаётся Президенту.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Организация
+      options:
+        - ЧАО
+        - ЧЦС
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Название
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: Что нужно
+      options:
+        - Закрытие (прекращение деятельности)
+        - Смена владельца
+        - Снятие залога (только ЧЦС)
+    validations:
+      required: true
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник заявителя
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Основание и подробности
+      description: Для смены владельца укажите ник нового владельца. Если есть решение суда — его номер.
+    validations:
+      required: true

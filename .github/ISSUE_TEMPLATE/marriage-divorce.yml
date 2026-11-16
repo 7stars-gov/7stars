@@ -1,0 +1,48 @@
+name: Расторжение брака
+description: Расторжение брака через суд или по соглашению в Брачном зале (ЗК8.7)
+title: "[Расторжение брака] "
+labels: ["брак", "расторжение", "route:брачный-зал"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Расторжение возможно двумя путями (ЗК8.7): по заявлению через обычный суд или по соглашению сторон с регистрацией в том же Брачном зале.
+        Укажите только игровые ники.
+  - type: input
+    id: bz
+    attributes:
+      label: Брачный зал, где был зарегистрирован брак
+    validations:
+      required: true
+  - type: input
+    id: marriage_id
+    attributes:
+      label: Номер брака (БР-XXX)
+    validations:
+      required: true
+  - type: dropdown
+    id: path
+    attributes:
+      label: Путь расторжения
+      options:
+        - Соглашение сторон (оба согласны)
+        - Через суд (один или оба супруга)
+    validations:
+      required: true
+  - type: input
+    id: spouse1
+    attributes:
+      label: Супруг(а) 1 (игровой ник)
+    validations:
+      required: true
+  - type: input
+    id: spouse2
+    attributes:
+      label: Супруг(а) 2 (игровой ник)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Комментарий
+      description: Для суда — суть заявления. Для соглашения — подтверждение обоих супругов.

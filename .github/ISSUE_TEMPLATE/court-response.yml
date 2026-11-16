@@ -1,0 +1,43 @@
+name: Суд: апелляция и ответ на иск
+description: Апелляция решения суда или ответ на иск (Статья 8, ЗК1.3, ЗК2)
+title: "[Суд] "
+labels: ["суд", "route:суд"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ответ на иск или апелляция подаётся в письменной форме (Статья 8.2 Конституции). Срок рассмотрения — 14 дней (Статья 8.7.4).
+        Если вы не согласны с решением обычного суда, обратитесь через этот шаблон (ЗК2).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что нужно
+      options:
+        - Апелляция решения
+        - Ответ на иск (я ответчик)
+    validations:
+      required: true
+  - type: input
+    id: case
+    attributes:
+      label: Номер дела или решения
+      description: Например, ОС-001-2026 или номер иска.
+    validations:
+      required: true
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник заявителя
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Суть и основания
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Доказательства
+      description: Ссылки на записи, документы, номера связанных решений.

@@ -1,0 +1,27 @@
+name: Вопрос по адресам и реестрам
+description: Любой вопрос по адресам, реестрам и услугам, которого нет в других шаблонах
+title: "[Вопрос] "
+labels: ["вопрос", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Опишите ситуацию. Ответственный Регистратор (ЗК19 — адресный реестр, ЗК7 — остальные реестры) ответит в пределах своей компетенции или перенаправит заявку в нужный орган.
+        Если вопрос касается суда, ГИБДД или GoBank, лучше выбрать соответствующий шаблон.
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Вопрос
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Адрес, объект или реестр, если есть
+      description: Например, улица, номер дома, название организации.

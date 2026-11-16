@@ -1,0 +1,58 @@
+name: Межведомственный запрос
+description: Запрос одного органа к другому (ЗК26.4). Публикуется в журнале модерации
+title: "[Межвед] "
+labels: ["межведомственный", "ожидает ответа"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Межведомственный запрос направляется органу-адресату и публикуется в журнале модерации (ЗК26.7).
+        Адресат отвечает в этом же Issue. Срок ответа — 3 рабочих дня, если закон не установил иной срок (ЗК26.4).
+        Не указывайте личные данные из реального мира.
+  - type: dropdown
+    id: target
+    attributes:
+      label: Адресат (орган)
+      options:
+        - Регистратор
+        - ГИБДД
+        - GoBank
+        - Брачный зал
+        - Городской совет
+        - Суд
+        - Президент
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Направитель (орган)
+      options:
+        - Регистратор
+        - ГИБДД
+        - GoBank
+        - Брачный зал
+        - Городской совет
+        - Суд
+        - Президент
+    validations:
+      required: true
+  - type: input
+    id: basis
+    attributes:
+      label: Основание (статья закона)
+      description: Например, ЗК16.6 или ЗК26.5.
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Что нужно
+      description: Конкретный запрос: сведения, действие, решение.
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Срок ответа
+      description: По умолчанию 3 рабочих дня (ЗК26.4).

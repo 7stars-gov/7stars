@@ -1,0 +1,44 @@
+name: Снятие имущества с регистрации
+description: Снятие с регистрации дома или транспорта (ЗК7, ЗК14.7, Статья 25)
+title: "[Снятие с регистрации] "
+labels: ["имущество", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Продажа и аренда оформляются только через GoBank (ЗК16.4). Этот шаблон не для сделок.
+        Основания и порядок описаны в проекте ЗК25.7stars. После подписания закона Регистратор работает по нему. До этого вопрос передаётся Президенту.
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что снимаем
+      options:
+        - Дом или здание
+        - Транспорт
+    validations:
+      required: true
+  - type: textarea
+    id: object
+    attributes:
+      label: Объект
+      description: Адрес или координаты, вид и марка транспорта.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Причина снятия
+    validations:
+      required: true
+  - type: checkboxes
+    id: sale
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Если объект продан или сдан в аренду, сделка оформлена через GoBank (ЗК16.4) и номер сделки указан в комментарии.

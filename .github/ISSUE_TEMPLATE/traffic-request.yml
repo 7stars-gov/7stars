@@ -1,0 +1,48 @@
+name: ГИБДД: изъятие, штраф, обжалование
+description: Возврат изъятого транспорта, оплата и обжалование штрафа (ЗК21.8, ЗК21.16, ЗК21.18)
+title: "[ГИБДД] "
+labels: ["ГИБДД", "route:гибдд"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Изъятие транспорта возвращается только по решению обычного суда (ЗК21.8).
+        Оплата штрафа — через GoBank (ЗК21.16). Обжаловать решение ГИБДД можно в обычном суде (ЗК21.18).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что нужно
+      options:
+        - Возврат изъятого транспорта (есть решение суда)
+        - Оплата штрафа
+        - Обжалование решения ГИБДД (штраф или изъятие)
+    validations:
+      required: true
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца или заявителя
+    validations:
+      required: true
+  - type: input
+    id: case
+    attributes:
+      label: Номер записи в Реестре нарушений ПДД или номер решения
+    validations:
+      required: true
+  - type: input
+    id: vehicle
+    attributes:
+      label: Транспорт
+  - type: textarea
+    id: details
+    attributes:
+      label: Подробности
+      description: Для обжалования — основание. Для возврата — номер решения суда.
+    validations:
+      required: true
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата (для штрафа)
+      description: Дата и способ оплаты в GoBank.

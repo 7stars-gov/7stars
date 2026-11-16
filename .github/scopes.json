@@ -1,0 +1,17 @@
+{
+  "_комментарий": "Зоны ответственности (ЗК26.2, ЗК26.11, ЗК26.12). Ключ — путь или его начало. Побеждает самый длинный совпавший ключ. type: team — членство в команде организации 7stars-gov; type: user — конкретный логин. Изменение списка — по ЗК1.2.",
+  "Constitution 7stars.md": { "type": "user", "name": "novimaksim" },
+  "Законы/": { "type": "user", "name": "novimaksim" },
+  "Постановления/": { "type": "user", "name": "novimaksim" },
+  ".github/": { "type": "user", "name": "novimaksim" },
+  "readme.md": { "type": "user", "name": "novimaksim" },
+  "Реестры/БЗ/": { "type": "team", "name": "team-1" },
+  "Реестры/": { "type": "team", "name": "team" },
+  "Органы власти/ГИБДД/": { "type": "team", "name": "team-3" },
+  "Органы власти/GoBank/": { "type": "team", "name": "gobank" },
+  "Органы власти/Городской совет/": { "type": "team", "name": "team-4" },
+  "Суд/": { "type": "team", "name": "team-2" },
+  "Инструкции/": { "type": "user", "name": "novimaksim" },
+  "Отчёты/": { "type": "user", "name": "novimaksim" },
+  "_по_умолчанию": { "type": "user", "name": "novimaksim" }
+}

@@ -1,0 +1,38 @@
+name: GoBank: обмен, налоги, взносы
+description: Обмен наличных изумрудов на цифровые, уплата налогов и взносов (ЗК16.2, ЗК16.3)
+title: "[GoBank] "
+labels: ["GoBank", "route:gobank"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GoBank обменивает наличные изумруды на цифровые по курсу 1 к 1 (ЗК16.2) и принимает налоги, сборы, взносы и штрафы (ЗК16.3).
+        Сделки с недвижимостью оформляются отдельной заявкой «Сделка с недвижимостью».
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что нужно
+      options:
+        - Обмен наличных изумрудов на цифровые
+        - Уплата налога или сбора
+        - Уплата регистрационного взноса
+        - Уплата штрафа
+    validations:
+      required: true
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник
+    validations:
+      required: true
+  - type: input
+    id: amount
+    attributes:
+      label: Сумма (Изумруды)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Комментарий
+      description: Для штрафа — номер записи или решения. Для налога — за какой период.

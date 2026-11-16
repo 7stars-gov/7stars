@@ -1,0 +1,44 @@
+name: Номерной знак: возврат, замена, аннулирование
+description: Возврат, замена по утрате или аннулирование номерного знака (ЗК15.2, ЗК15.8)
+title: "[Номер: изменение] "
+labels: ["номерной знак", "route:регистратор"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Сбор за замену — 3 Изумруда (ЗК15.6, ЗК6.2). Оплатите в GoBank и укажите дату оплаты.
+        Золотые номера здесь не рассматриваются: за ними — отдельная заявка Президенту (ЗК15.5).
+  - type: input
+    id: nick
+    attributes:
+      label: Игровой ник владельца
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: Что нужно
+      options:
+        - Возврат номера (снятие транспорта с учёта)
+        - Замена номера по утрате
+        - Аннулирование номера
+    validations:
+      required: true
+  - type: input
+    id: plate
+    attributes:
+      label: Текущий номер
+      description: Например, A1234 07.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Причина и подробности
+    validations:
+      required: true
+  - type: input
+    id: payment
+    attributes:
+      label: Оплата сбора
+      description: Дата и способ оплаты в GoBank. Не требуется для возврата и аннулирования, если Регистратор подтвердит иное.
